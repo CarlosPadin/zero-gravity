@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import React from "react";
 import "./globals.css";
+import ReactQueryProvider from "./providers/ReactQueryProvider";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,7 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "0G Token Dashboard - Análisis de Mercado en Tiempo Real",
+  title:
+    "0G Token Dashboard - Análisis de Mercado en Tiempo Real",
   description:
     "Dashboard profesional para visualizar precio, volumen y profundidad del token 0G en diferentes mercados",
   generator: "v0.app",
@@ -34,7 +38,7 @@ export const metadata: Metadata = {
     ],
     apple: "/apple-icon.png",
   },
-}
+};
 
 export default function RootLayout({
   children,
@@ -43,10 +47,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <ReactQueryProvider>{children}</ReactQueryProvider>
       </body>
     </html>
   );

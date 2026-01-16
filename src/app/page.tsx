@@ -13,11 +13,11 @@ export default function Page() {
         <div>
           <h1 className="text-4xl font-bold">0G Token Dashboard</h1>
           <p className="text-muted-foreground">
-            Análisis en tiempo real de mercados y volumen
+            Real time analysis of markets and volume
           </p>
         </div>
 
-        <StatsOverview markets={marketData} />
+        <StatsOverview/>
         <MarketTable markets={marketData} />
         <HourlyVolumeChart data={hourlyVolumeData} />
       </div>
