@@ -1,3 +1,6 @@
+"use client";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import {
   Table,
@@ -14,27 +17,35 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getMarketExchanges } from "@/lib/api/get-market-exchanges";
+import { IMarketExchanges } from "@/interfaces";
+import { LoadingSkeleton, TablePagination } from "../table-complements";
 
-type Market = {
-  exchange: string;
-  price: number;
-  volume: number;
-  depth: number;
-  change: number;
-};
 
-interface MarketTableProps {
-  markets: Market[];
-}
+export function MarketTable() {
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const { data, isLoading } = useQuery<IMarketExchanges[]>({
+    queryKey: ["marketExchanges"],
+    queryFn: getMarketExchanges,
+    refetchInterval: 2 * 60 * 1000, // 2 mins
+  });
 
-export function MarketTable({ markets }: MarketTableProps) {
+  const totalPages = data
+    ? Math.ceil(data.length / pageSize)
+    : 1;
+
+  const paginatedData = data?.slice(
+    (page - 1) * pageSize,
+    page * pageSize,
+  );
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Datos de Mercado por Exchange</CardTitle>
+        <CardTitle>Markets Data by Exchange</CardTitle>
         <CardDescription>
-          Precio, volumen y profundidad en diferentes
-          plataformas
+          Price, volume and change in different platforms
         </CardDescription>
       </CardHeader>
 
@@ -44,58 +55,87 @@ export function MarketTable({ markets }: MarketTableProps) {
             <TableHeader>
               <TableRow>
                 <TableHead>Exchange</TableHead>
+                <TableHead>Quote</TableHead>
                 <TableHead className="text-right">
-                  Precio (USD)
+                  Price (USD)
                 </TableHead>
                 <TableHead className="text-right">
-                  Volumen 24h
+                  Volume 24h
                 </TableHead>
                 <TableHead className="text-right">
-                  Profundidad
+                  Volume %
                 </TableHead>
                 <TableHead className="text-right">
-                  Cambio 24h
+                  Change 24h
                 </TableHead>
               </TableRow>
             </TableHeader>
 
-            <TableBody>
-              {markets.map((m) => (
-                <TableRow key={m.exchange}>
-                  <TableCell className="font-medium">
-                    {m.exchange}
-                  </TableCell>
-                  <TableCell className="text-right font-mono">
-                    ${m.price.toFixed(4)}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    ${(m.volume / 1_000_000).toFixed(2)}M
-                  </TableCell>
-                  <TableCell className="text-right">
-                    ${(m.depth / 1_000_000).toFixed(2)}M
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <span
-                      className={`flex items-center justify-end gap-1 ${
-                        m.change > 0
-                          ? "text-green-600"
-                          : "text-red-600"
-                      }`}
+            {isLoading ? (
+              <LoadingSkeleton />
+            ) : !paginatedData ? (
+              <div className="flex space-x-4">No data</div>
+            ) : (
+              <TableBody>
+                {paginatedData &&
+                  paginatedData.map((m) => (
+                    <TableRow
+                      key={
+                        m.exchange_id +
+                        m.base_id +
+                        m.quote_id
+                      }
                     >
-                      {m.change > 0 ? (
-                        <TrendingUp className="h-4 w-4" />
-                      ) : (
-                        <TrendingDown className="h-4 w-4" />
-                      )}
-                      {m.change > 0 && "+"}
-                      {m.change}%
-                    </span>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
+                      <TableCell className="font-medium">
+                        {m.exchange_id.toUpperCase()}
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {m.quote_symbol}
+                      </TableCell>
+                      <TableCell className="text-right font-mono">
+                        ${m.price_usd.toFixed(4)}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        $
+                        {(
+                          m.volume_usd_24h / 1_000_000
+                        ).toFixed(2)}
+                        M
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {m.volume_percent.toFixed(2)}%
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <span
+                          className={`flex items-center justify-end gap-1 ${
+                            0.5 > 0
+                              ? "text-green-600"
+                              : "text-red-600"
+                          }`}
+                        >
+                          {0.5 > 0 ? (
+                            <TrendingUp className="h-4 w-4" />
+                          ) : (
+                            <TrendingDown className="h-4 w-4" />
+                          )}
+                          {0.5 > 0 && "+"}
+                          {0.5}%
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            )}
           </Table>
         </div>
+
+        <TablePagination
+          page={page}
+          totalPages={totalPages}
+          pageSize={pageSize}
+          onPageChange={setPage}
+          onPageSizeChange={setPageSize}
+        />
       </CardContent>
     </Card>
   );
