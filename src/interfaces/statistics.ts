@@ -16,3 +16,13 @@ export interface IMarketExchanges {
     volume_usd_24h: number;
     volume_percent: number;
 }
+
+export interface IMarketVolumes {
+    timestamp: Date;
+    volume_usd_24h: number;
+}
+
+export interface IMarketVolumesFormatted {
+    day: string;
+    volume_usd_24h: number;
+}
