@@ -1,10 +1,7 @@
 "use client"
-
 import { HourlyVolumeChart } from "@/components/statistics/HourlyVolumeChart"
 import { MarketTable } from "@/components/statistics/MarketTable"
 import { StatsOverview } from "@/components/statistics/StatsOverview"
-import { marketData, hourlyVolumeData } from "./constants/market-data"
-
 
 export default function Page() {
   return (
@@ -18,8 +15,8 @@ export default function Page() {
         </div>
 
         <StatsOverview/>
-        <MarketTable markets={marketData} />
-        <HourlyVolumeChart data={hourlyVolumeData} />
+        <MarketTable/>
+        <HourlyVolumeChart/>
       </div>
     </div>
   )
