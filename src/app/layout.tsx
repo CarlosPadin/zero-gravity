@@ -4,7 +4,6 @@ import React from "react";
 import "./globals.css";
 import ReactQueryProvider from "./providers/ReactQueryProvider";
 
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -17,27 +16,9 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title:
-    "0G Token Dashboard - Análisis de Mercado en Tiempo Real",
+    "0G Token Dashboard",
   description:
-    "Dashboard profesional para visualizar precio, volumen y profundidad del token 0G en diferentes mercados",
-  generator: "v0.app",
-  icons: {
-    icon: [
-      {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
-      },
-    ],
-    apple: "/apple-icon.png",
-  },
+    "Proffesional dashboard for analyzing 0G token market data",
 };
 
 export default function RootLayout({

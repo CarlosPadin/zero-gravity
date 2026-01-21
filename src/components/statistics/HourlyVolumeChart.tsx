@@ -20,12 +20,12 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { getMarketVolumes } from "@/lib/api/get-market-volumes";
 import {
   IMarketVolumes,
   IMarketVolumesFormatted,
 } from "@/interfaces";
 import { Spinner } from "../ui/spinner";
+import { getMarketVolumes } from "@/lib/api/get-market-stats";
 
 export function HourlyVolumeChart() {
   const { data, isLoading } = useQuery<IMarketVolumes[]>({

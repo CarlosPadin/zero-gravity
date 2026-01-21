@@ -15,14 +15,15 @@ export interface IMarketExchanges {
     price_usd:      number;
     volume_usd_24h: number;
     volume_percent: number;
+    price_change:   number;
 }
 
 export interface IMarketVolumes {
-    timestamp: Date;
+    timestamp:      Date;
     volume_usd_24h: number;
 }
 
 export interface IMarketVolumesFormatted {
-    day: string;
+    day:            string;
     volume_usd_24h: number;
 }
