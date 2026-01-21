@@ -17,10 +17,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getMarketExchanges } from "@/lib/api/get-market-exchanges";
+import {
+  LoadingSkeleton,
+  TablePagination,
+} from "../table-complements";
+import { getMarketExchanges } from "@/lib/api/get-market-stats";
 import { IMarketExchanges } from "@/interfaces";
-import { LoadingSkeleton, TablePagination } from "../table-complements";
-
 
 export function MarketTable() {
   const [page, setPage] = useState(1);
@@ -28,7 +30,7 @@ export function MarketTable() {
   const { data, isLoading } = useQuery<IMarketExchanges[]>({
     queryKey: ["marketExchanges"],
     queryFn: getMarketExchanges,
-    refetchInterval: 2 * 60 * 1000, // 2 mins
+    refetchInterval: 1 * 60 * 1000, // 1 mins
   });
 
   const totalPages = data
@@ -39,6 +41,8 @@ export function MarketTable() {
     (page - 1) * pageSize,
     page * pageSize,
   );
+
+  console.log('data: ', data)
 
   return (
     <Card>
@@ -74,7 +78,13 @@ export function MarketTable() {
             {isLoading ? (
               <LoadingSkeleton />
             ) : !paginatedData ? (
-              <div className="flex space-x-4">No data</div>
+              <TableBody className="font-medium">
+                <TableRow>
+                  <TableCell className="font-medium">
+                    No data
+                  </TableCell>
+                </TableRow>
+              </TableBody>
             ) : (
               <TableBody>
                 {paginatedData &&
@@ -108,18 +118,18 @@ export function MarketTable() {
                       <TableCell className="text-right">
                         <span
                           className={`flex items-center justify-end gap-1 ${
-                            0.5 > 0
+                            m.price_change > 0
                               ? "text-green-600"
                               : "text-red-600"
                           }`}
                         >
-                          {0.5 > 0 ? (
+                          {m.price_change > 0 ? (
                             <TrendingUp className="h-4 w-4" />
                           ) : (
                             <TrendingDown className="h-4 w-4" />
                           )}
-                          {0.5 > 0 && "+"}
-                          {0.5}%
+                          {m.price_change > 0 && "+"}
+                          {(m.price_change * 100).toFixed(3)}%
                         </span>
                       </TableCell>
                     </TableRow>

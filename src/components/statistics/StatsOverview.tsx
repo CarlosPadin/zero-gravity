@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { IStatsOverview } from "@/interfaces";
-import { getOverviewStats } from "@/lib/api/get-overview-stats";
+import { getOverviewStats } from "@/lib/api/get-market-stats";
 import { useQuery } from "@tanstack/react-query";
 import { Spinner } from "../ui/spinner";
 import { TrendingDown, TrendingUp } from "lucide-react";
