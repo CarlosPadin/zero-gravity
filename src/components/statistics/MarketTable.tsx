@@ -30,7 +30,7 @@ export function MarketTable() {
   const { data, isLoading } = useQuery<IMarketExchanges[]>({
     queryKey: ["marketExchanges"],
     queryFn: getMarketExchanges,
-    refetchInterval: 1 * 60 * 1000, // 1 mins
+    refetchInterval: 8 * 60 * 1000, // 8 mins
   });
 
   const totalPages = data
